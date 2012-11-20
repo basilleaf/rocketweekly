@@ -1,7 +1,8 @@
 import simplejson
 import urllib2
-import tumblpy
 from random import randint
+from secrets import *
+from tumblpy import *
 
 # previously used content is logged to a file, read that file 
 published_file = 'published.json'
@@ -23,26 +24,31 @@ for k,d in enumerate(data):
     if d['GRIN_id']	in published:
     	del data[k]
 
-# then pick a random one:
+# then pick a random post from the renaming to-be-published:
 rand = randint(0,len(data)-1)
 rocket_launch = data[rand]
 
-# update the published log
-grin_id = rocket_launch['GRIN_id']
-published += [grin_id]
-f = open(published_file, 'w')
-simplejson.dump(published, f)
-f.close()
-
-# and tumblr post it
-# tumblr suspended me wtf.. todo.. something like:
-t = Tumblpy(app_key = '*your app key*',
-        app_secret = '*your app secret*',
-        oauth_token=oauth_token,
+# tumblr post it
+t = Tumblpy(app_key = app_key,
+        app_secret = app_secret,
+        oauth_token = oauth_token,
         oauth_token_secret=oauth_token_secret)
+blog_url = 'rocketweekly.tumblr.com'
+title = rocket_launch['title']
+description = rocket_launch['description']
+credit = rocket_launch['credit']
+caption = '<h2>' + title + '</h2><p>' + description + '</p>' + credit
+link = rocket_launch['page_url']
+img_url = rocket_launch['Large']
+img = urllib2.urlopen(img_url)
+post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': caption, 'data': img, 'link':link})
 
-blog_url = "BLOG URL"
-post = rocket_launch['title'] + '<br>' + rocket_launch['description']
-img = urllib2.urlopen(rocket_launch['Large']).read()
-post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': post, 'data': img})
-print post  # returns id if posted successfully
+
+# update the published log
+if id in post:
+	grin_id = rocket_launch['GRIN_id']
+	published += [grin_id]
+	f = open(published_file, 'w')
+	simplejson.dump(published, f)
+	f.close()
+
