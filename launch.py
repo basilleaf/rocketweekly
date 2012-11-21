@@ -38,8 +38,9 @@ title = rocket_launch['title']
 description = rocket_launch['description']
 credit = rocket_launch['credit']
 link = rocket_launch['page_url']
+date = rocket_launch['date']
 img_url = rocket_launch['Large']
-caption = '<h2>' + title + '</h2><p>' + description + '</p>' + credit + '<p>Visit the <a href = "' + link + '">NASA GRIN page</a> for more info and image sizes.'
+caption = '<h2>' + title + '</h2><p><b>' + date + '</b></p><p>' + description + '</p>' + credit + '<p>Visit the <a href = "' + link + '">NASA GRIN page</a> for more info and image sizes.'
 img = urllib2.urlopen(img_url)
 post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': caption, 'data': img, 'link':img_url})
 
