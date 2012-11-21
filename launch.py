@@ -15,7 +15,7 @@ opener = urllib2.build_opener()
 f = opener.open(req)
 data = simplejson.load(f)
 
-# first checking that we haven't already published them all
+# first make sure we haven't already published them all
 if len(data) == len(published): 
 	published = [] # every post has been published, starting over from scratch
 
@@ -24,7 +24,7 @@ for k,d in enumerate(data):
     if d['GRIN_id']	in published:
     	del data[k]
 
-# then pick a random post from the renaming to-be-published:
+# pick a random post from the to-be-published list:
 rand = randint(0,len(data)-1)
 rocket_launch = data[rand]
 
@@ -43,9 +43,8 @@ img_url = rocket_launch['Large']
 img = urllib2.urlopen(img_url)
 post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': caption, 'data': img, 'link':link})
 
-
 # update the published log
-if id in post:
+if post['id']:
 	grin_id = rocket_launch['GRIN_id']
 	published += [grin_id]
 	f = open(published_file, 'w')
