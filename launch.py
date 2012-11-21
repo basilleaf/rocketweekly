@@ -28,20 +28,20 @@ for k,d in enumerate(data):
 rand = randint(0,len(data)-1)
 rocket_launch = data[rand]
 
-# tumblr post it
+# post to tumblr
+blog_url = 'rocketweekly.tumblr.com'
 t = Tumblpy(app_key = app_key,
         app_secret = app_secret,
         oauth_token = oauth_token,
         oauth_token_secret=oauth_token_secret)
-blog_url = 'rocketweekly.tumblr.com'
 title = rocket_launch['title']
 description = rocket_launch['description']
 credit = rocket_launch['credit']
-caption = '<h2>' + title + '</h2><p>' + description + '</p>' + credit
 link = rocket_launch['page_url']
 img_url = rocket_launch['Large']
+caption = '<h2>' + title + '</h2><p>' + description + '</p>' + credit + '<p>Visit the <a href = "' + link + '">NASA GRIN page</a> for more info and image sizes.'
 img = urllib2.urlopen(img_url)
-post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': caption, 'data': img, 'link':link})
+post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': caption, 'data': img, 'link':img_url})
 
 # update the published log
 if post['id']:
