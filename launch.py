@@ -47,7 +47,7 @@ post = t.post('post', blog_url=blog_url, params={'type':'photo', 'caption': capt
 # update the published log
 if post['id']:
 	grin_id = rocket_launch['GRIN_id']
-	published += [grin_id]
+	published.append(grin_id)
 	f = open(published_file, 'w')
 	simplejson.dump(published, f)
 	f.close()
